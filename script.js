@@ -11,6 +11,10 @@ const loadingProgress = document.getElementById('loading-progress');
 const loadingPercentage = document.getElementById('loading-percentage');
 const scrollProgress = document.getElementById('scroll-progress');
 const header = document.getElementById('header');
+if (!header) {
+    console.error('Header element not found! Check if element exists with id="header"');
+    return;
+}
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
 
@@ -72,9 +76,19 @@ function initializeScrollEffects() {
     }
     
     function updateHeaderBackground() {
-        const scrolled = window.pageYOffset > 100;
-        header.classList.toggle('scrolled', scrolled);
+    if (!header) return; // Safety check
+    
+    const scrolled = window.pageYOffset > 100;
+    if (scrolled) {
+        header.style.background = 'rgba(255, 255, 255, 0.98)';
+        header.style.backdropFilter = 'blur(15px)';
+        header.style.boxShadow = '0 2px 30px rgba(0, 0, 0, 0.15)';
+    } else {
+        header.style.background = 'rgba(255, 255, 255, 0.95)';
+        header.style.backdropFilter = 'blur(10px)';
+        header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
     }
+}
     
     function updateParallaxElements() {
         const scrollTop = window.pageYOffset;
