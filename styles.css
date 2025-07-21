@@ -1,4 +1,4 @@
-/* Enhanced CSS with Modern Design */
+/* Enhanced CSS with Modern Design - styles.css */
 
 /* CSS Variables for consistent theming */
 :root {
@@ -2319,5 +2319,28 @@ body {
     .btn-primary-enhanced,
     .btn-secondary-enhanced {
         border: 2px solid currentColor;
+    }
+}
+
+/* Form Error Styles */
+.field-error {
+    color: #EF4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+    border-color: #EF4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Ripple Animation */
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
     }
 }

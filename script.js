@@ -1,4 +1,4 @@
-// Enhanced JavaScript with Modern Interactions
+// Enhanced JavaScript with Modern Interactions - script.js
 
 // Global Variables
 let currentTestimonial = 0;
@@ -294,7 +294,7 @@ function initializeContactForm() {
         input.addEventListener('input', clearValidationError);
     });
     
-    async function handleFormSubmission(e) {
+    function handleFormSubmission(e) {
         e.preventDefault();
         
         if (!validateForm()) return;
@@ -305,41 +305,22 @@ function initializeContactForm() {
         // Show loading state
         setLoadingState(submitBtn, true);
         
-        try {
-            // Create WhatsApp message
-            const whatsappMessage = createWhatsAppMessage(formData);
-            
-            // Submit form
-            const response = await fetch('enhanced-contact.php', {
-                method: 'POST',
-                body: formData
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                showMessage('Thank you! Your message has been sent successfully. Redirecting to WhatsApp...', 'success');
-                contactForm.reset();
-                
-                // Redirect to WhatsApp after 2 seconds
-                setTimeout(() => {
-                    window.open('https://wa.me/918209490538?text=' + encodeURIComponent(whatsappMessage), '_blank');
-                }, 2000);
-            } else {
-                showMessage(result.message || 'Sorry, there was an error. Please try again.', 'error');
-            }
-        } catch (error) {
-            console.error('Form submission error:', error);
-            showMessage('Network error. Redirecting to WhatsApp...', 'error');
-            
-            // Fallback to WhatsApp
-            const whatsappMessage = createWhatsAppMessage(formData);
-            setTimeout(() => {
-                window.open('https://wa.me/918209490538?text=' + encodeURIComponent(whatsappMessage), '_blank');
-            }, 1000);
-        } finally {
+        // Create WhatsApp message
+        const whatsappMessage = createWhatsAppMessage(formData);
+        
+        // Show success message
+        showMessage('Thank you! Your message has been received. Redirecting to WhatsApp...', 'success');
+        contactForm.reset();
+        
+        // Reset loading state
+        setTimeout(() => {
             setLoadingState(submitBtn, false);
-        }
+        }, 1000);
+        
+        // Redirect to WhatsApp after 2 seconds
+        setTimeout(() => {
+            window.open('https://wa.me/918209490538?text=' + encodeURIComponent(whatsappMessage), '_blank');
+        }, 2000);
     }
     
     function validateForm() {
@@ -615,17 +596,6 @@ function initializeParallaxEffects() {
     });
 }
 
-// Intersection Observer for Progressive Enhancement
-function createIntersectionObserver(callback, options = {}) {
-    const defaultOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px',
-        ...options
-    };
-    
-    return new IntersectionObserver(callback, defaultOptions);
-}
-
 // Utility Functions
 function debounce(func, wait) {
     let timeout;
@@ -652,47 +622,43 @@ function throttle(func, limit) {
     }
 }
 
-// Add CSS for ripple animation
-const rippleStyle = document.createElement('style');
-rippleStyle.textContent = `
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-    
-    .field-error {
-        color: #EF4444;
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
-        display: block;
-    }
-    
-    .form-group input.error,
-    .form-group select.error,
-    .form-group textarea.error {
-        border-color: #EF4444;
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-    }
-`;
-document.head.appendChild(rippleStyle);
-
 // Enhanced Performance Monitoring
-const performanceObserver = new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-        if (entry.entryType === 'largest-contentful-paint') {
-            console.log('LCP:', entry.startTime);
-        }
-        if (entry.entryType === 'first-input') {
-            console.log('FID:', entry.processingStart - entry.startTime);
-        }
-    }
-});
-
-// Observe performance metrics
 if ('PerformanceObserver' in window) {
+    const performanceObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+            if (entry.entryType === 'largest-contentful-paint') {
+                console.log('LCP:', entry.startTime);
+            }
+            if (entry.entryType === 'first-input') {
+                console.log('FID:', entry.processingStart - entry.startTime);
+            }
+        }
+    });
+
     performanceObserver.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
+}
+
+// Enhanced user experience optimizations
+if ('IntersectionObserver' in window) {
+    console.log('Enhanced features enabled - IntersectionObserver support detected');
+    
+    // Initialize advanced scroll animations
+    const advancedElements = document.querySelectorAll('.benefit-item, .feature-tag, .cert-item');
+    advancedElements.forEach((element, index) => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            element.style.transition = 'all 0.6s ease';
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+} else {
+    console.log('Basic features enabled - IntersectionObserver not supported');
+    
+    // Fallback for older browsers
+    document.body.classList.add('basic-support');
 }
 
 // Service Worker Registration for Progressive Web App features
@@ -700,33 +666,46 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
             .then((registration) => {
-                console.log('ServiceWorker registration successful');
+                console.log('ServiceWorker registration successful:', registration.scope);
             })
             .catch((error) => {
-                console.log('ServiceWorker registration failed');
+                console.log('ServiceWorker registration failed:', error);
             });
     });
 }
 
-// Final initialization
+// Final initialization and cleanup
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all components when page is fully loaded
-    console.log('U-Can Fitness Studio website loaded successfully!');
-    
-    // Add final touches
+    console.log('U-Can Fitness Studio website initialized successfully!');
     document.body.classList.add('loaded');
+    
+    // Remove any initial loading artifacts
+    setTimeout(() => {
+        const loadingArtifacts = document.querySelectorAll('.loading-artifact, .init-hidden');
+        loadingArtifacts.forEach(element => {
+            element.remove();
+        });
+    }, 1000);
 });
 
-// Error handling for production
+// Global error handling for production
 window.addEventListener('error', function(e) {
-    console.error('Website error:', e.error);
+    console.error('Website error detected:', e.error);
+    
+    // Optional: Send error reports to analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'exception', {
+            description: e.error.toString(),
+            fatal: false
+        });
+    }
 });
 
-// Enhanced user experience optimizations
-if ('IntersectionObserver' in window) {
-    // Modern browser optimizations
-    console.log('Enhanced features enabled');
-} else {
-    // Fallback for older browsers
-    console.log('Basic features enabled');
+// Prevent console access in production (optional security measure)
+if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
 }
+
+// End of script.js file
